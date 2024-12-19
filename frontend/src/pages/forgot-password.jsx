@@ -1,5 +1,5 @@
 import { GalleryVerticalEnd } from "lucide-react";
-import bg from "../../public/bg.png";
+import bg from "../assets/bg.png";
 
 import ForgotPasswordForm from "@/components/forms/forgot-password-form";
 

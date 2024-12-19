@@ -1,5 +1,5 @@
 import { GalleryVerticalEnd } from "lucide-react";
-import bg from "../../public/bg.png";
+import bg from "../assets/bg.png";
 
 import { LoginForm } from "@/components/forms/login-form";
 

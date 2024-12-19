@@ -1,9 +1,8 @@
 import { GalleryVerticalEnd } from "lucide-react";
 import bg from "../assets/bg.png";
+import { ResetPasswordForm } from "@/components/forms/reset-password";
 
-import { SignupForm } from "@/components/forms/signup-form";
-
-export default function SignUp() {
+export default function ResetPassword() {
   return (
     <div className="grid min-h-svh lg:grid-cols-2 max-h-screen overflow-auto">
       <div className="flex flex-col gap-4 p-6 md:p-10">
@@ -17,7 +16,7 @@ export default function SignUp() {
         </div>
         <div className="flex flex-1 items-center justify-center">
           <div className="w-full max-w-xs">
-            <SignupForm />
+            <ResetPasswordForm />
           </div>
         </div>
       </div>

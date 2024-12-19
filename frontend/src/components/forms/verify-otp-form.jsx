@@ -9,7 +9,6 @@ import PropTypes from "prop-types";
 // Components and UI elements
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import {
   Form,
   FormControl,
@@ -24,23 +23,29 @@ import { cn } from "@/lib/utils";
 
 // Hooks
 import { useForm } from "react-hook-form";
+import {
+  InputOTP,
+  InputOTPGroup,
+  InputOTPSeparator,
+  InputOTPSlot,
+} from "../ui/input-otp";
 
 const schema = z.object({
-  email: z.string().email(),
+  otp: z.string().min(6),
 });
 
-export default function ForgotPasswordForm({ className }) {
+export default function VerifyOTPForm({ className }) {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const form = useForm({
     resolver: zodResolver(schema),
     defaultValues: {
-      email: "",
+      otp: "",
     },
   });
 
-  const handleForgotPassword = async (values) => {
+  const handleVerifyOTP = async (values) => {
     const generateRandomToken = (length) => {
       let result = "";
       while (result.length < length) {
@@ -52,59 +57,82 @@ export default function ForgotPasswordForm({ className }) {
     const generatedToken = generateRandomToken(50);
     try {
       setLoading(true);
-      const { email } = values;
+      const { otp } = values;
 
-      if (!email) {
-        toast.error("Email is required.");
+      if (!otp) {
+        toast.error("OTP is required.");
         return;
       }
 
       const response = await axios.post(
-        "http://localhost:5000/api/auth/forgot-password",
-        values
+        "http://localhost:5000/api/auth/verify-otp",
+        { ...values, email: localStorage.getItem("email") }
       );
 
       if (response.status === 200) {
-        setLoading(false);
-        localStorage.setItem("email", email);
-        toast.success("Reset link sent successfully.");
-        navigate(`/verify-otp/${generatedToken}`);
+        toast.success("OTP verified successfully.");
+        navigate(`/reset-password/${generatedToken}`);
       }
     } catch (error) {
-      if (error.response && error.response.status === 401) {
+      if (error.response && error.response.status === 404) {
         setLoading(false);
-        toast.error("Email not found", {
-          description: "Please try another email.",
+        toast.error(error.response.data.message, {
+          description: "Please try again.",
         });
-      } else {
+      } else if (error.response && error.response.status === 402) {
         setLoading(false);
-        toast.error("Failed to send reset link.");
+        toast.error(error.response.data.message, {
+          description: "Please try again.",
+        });
+      } else if (error.response && error.response.status === 401) {
+        setLoading(false);
+        toast.error(error.response.data.message, {
+          description: "Please try again.",
+        });
+      } else if (error.response && error.response.status === 405) {
+        setLoading(false);
+        toast.error(error.response.data.message, {
+          description: "Please try again.",
+        });
       }
+    } finally {
+      setLoading(false);
     }
   };
   return (
     <Form {...form}>
       <form
         className={cn("flex flex-col gap-6", className)}
-        onSubmit={form.handleSubmit(handleForgotPassword)}
+        onSubmit={form.handleSubmit(handleVerifyOTP)}
       >
         <div className="flex flex-col items-center gap-2 text-center">
-          <h1 className="text-2xl font-bold">Forgot your password?</h1>
+          <h1 className="text-2xl font-bold">Verify your email address</h1>
           <p className="text-balance text-sm text-muted-foreground">
-            Enter your email address and we will send you a link to reset your
-            password.
+            We have sent a 6-digit OTP to your email address. Please enter it
           </p>
         </div>
         <div className="grid gap-6">
           <div className="grid gap-2">
             <FormField
               control={form.control}
-              name="email"
+              name="otp"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Email</FormLabel>
+                  <FormLabel>OTP</FormLabel>
                   <FormControl>
-                    <Input {...field} placeholder="m@example.com" />
+                    <InputOTP maxLength={6} {...field}>
+                      <InputOTPGroup>
+                        <InputOTPSlot index={0} />
+                        <InputOTPSlot index={1} />
+                        <InputOTPSlot index={2} />
+                      </InputOTPGroup>
+                      <InputOTPSeparator />
+                      <InputOTPGroup>
+                        <InputOTPSlot index={3} />
+                        <InputOTPSlot index={4} />
+                        <InputOTPSlot index={5} />
+                      </InputOTPGroup>
+                    </InputOTP>
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -112,7 +140,7 @@ export default function ForgotPasswordForm({ className }) {
             />
           </div>
           <Button type="submit" className="w-full" disabled={loading}>
-            {loading ? "Sending..." : "Send reset link"}
+            {loading ? "Verifying..." : "Verify OTP"}
           </Button>
         </div>
         <div className="text-center text-sm">
@@ -129,6 +157,6 @@ export default function ForgotPasswordForm({ className }) {
   );
 }
 
-ForgotPasswordForm.propTypes = {
+VerifyOTPForm.propTypes = {
   className: PropTypes.string,
 };
