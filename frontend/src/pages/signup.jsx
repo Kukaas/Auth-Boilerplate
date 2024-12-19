@@ -1,7 +1,6 @@
 import { GalleryVerticalEnd } from "lucide-react";
 
-import { SignupForm } from "@/components/signup-form";
-import { Toaster } from "sonner";
+import { SignupForm } from "@/components/forms/signup-form";
 
 export default function SignUp() {
   return (
@@ -12,7 +11,7 @@ export default function SignUp() {
             <div className="flex h-6 w-6 items-center justify-center rounded-md bg-primary text-primary-foreground">
               <GalleryVerticalEnd className="size-4" />
             </div>
-            Acme Inc.
+            Company Name
           </a>
         </div>
         <div className="flex flex-1 items-center justify-center">
@@ -28,7 +27,6 @@ export default function SignUp() {
           className="absolute inset-0 h-full w-full object-cover dark:brightness-[0.2] dark:grayscale"
         />
       </div>
-      <Toaster position="top-right" richColors />
     </div>
   );
 }
