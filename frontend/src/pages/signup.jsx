@@ -1,4 +1,5 @@
 import { GalleryVerticalEnd } from "lucide-react";
+import bg from "../../public/bg.png";
 
 import { SignupForm } from "@/components/forms/signup-form";
 
@@ -22,9 +23,9 @@ export default function SignUp() {
       </div>
       <div className="relative hidden bg-muted lg:block">
         <img
-          src="/placeholder.svg"
+          src={bg}
           alt="Image"
-          className="absolute inset-0 h-full w-full object-cover dark:brightness-[0.2] dark:grayscale"
+          className="absolute inset-0 h-full w-full object-cover dark:brightness-[0.2] dark:grayscale brightness-50"
         />
       </div>
     </div>
