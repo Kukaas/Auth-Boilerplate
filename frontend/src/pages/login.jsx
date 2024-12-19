@@ -1,7 +1,6 @@
 import { GalleryVerticalEnd } from "lucide-react";
 
 import { LoginForm } from "@/components/login-form";
-import { Toaster } from "sonner";
 
 export default function SignIn() {
   return (
@@ -28,7 +27,6 @@ export default function SignIn() {
           className="absolute inset-0 h-full w-full object-cover dark:brightness-[0.2] dark:grayscale"
         />
       </div>
-      <Toaster position="top-right" richColors />
     </div>
   );
 }
