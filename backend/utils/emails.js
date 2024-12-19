@@ -20,7 +20,7 @@ export const sendVerificationEmail = async (user, res) => {
     const savedVerification = await verification.save();
 
     // Construct the verification URL
-    const url = `http://localhost:5000/api/verify/${uniqueString}/${userId}`;
+    const url = `http://localhost:5000/api/auth/verify/${uniqueString}/${userId}`;
 
     // Create email options
     const mailOptions = {
@@ -29,66 +29,99 @@ export const sendVerificationEmail = async (user, res) => {
       subject: "Account Verification",
       html: `
         <!DOCTYPE html>
-        <html>
-        <head>
-            <style>
-            body {
-                font-family: Arial, sans-serif;
-                color: #333;
-                margin: 0;
-                padding: 0;
-            }
+          <html>
+          <head>
+          <link
+            href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap"
+            rel="stylesheet"
+          />
+              <style>
+                  body {
+                      font-family: "Poppins", sans-serif;
+                      background-color: #f9f9f9;
+                      margin: 0;
+                      padding: 0;
+                      color: #333;
+                      display: flex;
+                      justify-content: center;
+                      align-items: center;
+                      min-height: 100vh;
+                  }
 
-            h1 {
-                text-align: center;
-                color: #444;
-            }
+                  .container {
+                      max-width: 600px;
+                      margin: 20px;
+                      padding: 20px;
+                      background-color: #ffffff;
+                      border-radius: 10px;
+                      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+                      text-align: center;
+                      width: 90%;
+                  }
 
-            h2 {
-                text-align: center;
-                color: #555;
-            }
+                  h1 {
+                      color: #007bff;
+                      font-size: 24px;
+                      margin-bottom: 20px;
+                  }
 
-            p {
-                text-align: center;
-                font-size: 16px;
-                line-height: 1.5;
-            }
+                  h2 {
+                      color: #555;
+                      font-size: 20px;
+                      margin-bottom: 20px;
+                  }
 
-            .button-link {
-                display: inline-block;
-                text-decoration: none;
-                background-color: #007bff;
-                color: #fff;
-                padding: 10px 20px;
-                font-size: 16px;
-                border-radius: 5px;
-                margin: 20px auto;
-                text-align: center;
-            }
+                  p {
+                      font-size: 16px;
+                      line-height: 1.6;
+                      margin-bottom: 20px;
+                  }
 
-            .button-link:hover {
-                background-color: #0056b3;
-            }
+                  .button-link {
+                      display: inline-block;
+                      text-decoration: none;
+                      background-color: #e0e0e0;
+                      color: black;
+                      padding: 12px 25px;
+                      font-size: 16px;
+                      font-weight: bold;
+                      border-radius: 5px;
+                      transition: background-color 0.3s ease;
+                  }
 
-            .container {
-                max-width: 600px;
-                margin: 0 auto;
-                padding: 20px;
-                text-align: center;
-                background-color: #fff;
-            }
-            </style>
-        </head>
-        <body>
-            <div class="container">
-            <h1>Email Verification</h1>
-            <h2>Hello ${user.name}</h2>
-            <p>Thank you for registering on our website. Please click on the link below to verify your account:</p>
-            <a href="${url}" class="button-link">Verify Your Account</a>
-            <p>If you did not register on our website, please ignore this email.</p>
-            </div>
-        </body>
+                  .button-link:hover {
+                      background-color: #c7c7c7;
+                  }
+
+                  @media (max-width: 600px) {
+                      h1 {
+                          font-size: 20px;
+                      }
+
+                      h2 {
+                          font-size: 18px;
+                      }
+
+                      p {
+                          font-size: 14px;
+                      }
+
+                      .button-link {
+                          font-size: 14px;
+                          padding: 10px 20px;
+                      }
+                  }
+              </style>
+          </head>
+          <body>
+              <div class="container">
+                  <h1>Email Verification</h1>
+                  <h2>Hello ${user.name}</h2>
+                  <p>Thank you for registering on our website. Please click on the link below to verify your account:</p>
+                  <a href="${url}" class="button-link">Verify Your Account</a>
+                  <p>If you did not register on our website, please ignore this email.</p>
+              </div>
+          </body>
         </html>
       `,
     };

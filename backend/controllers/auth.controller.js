@@ -3,6 +3,9 @@ import bcrypt from "bcryptjs";
 import { setToken } from "../utils/setToken.js";
 import { sendVerificationEmail } from "../utils/emails.js";
 import dotenv from "dotenv";
+import UserVerification from "../models/user.verification.model.js";
+import path, { dirname, join } from "path";
+import { fileURLToPath } from "url";
 
 dotenv.config();
 
@@ -96,4 +99,35 @@ export const login = async (req, res, next) => {
   } catch (error) {
     next(error);
   }
+};
+
+export const verifyEmail = async (req, res, next) => {
+  const { userId, uniqueString } = req.params;
+
+  const userVerification = await UserVerification.findOne({ userId });
+  if (!userVerification) {
+    return res.redirect(
+      "http://localhost:5173/api/v1/auth/verifiedEmail?error=true&message=Email%20verified%20or%20link%20expired"
+    );
+  }
+
+  const isMatch = bcrypt.compare(uniqueString, userVerification.uniqueString);
+  if (!isMatch) {
+    return res.redirect(
+      "http://localhost:5173/api/v1/auth/verifiedEmail?error=true&message=Link%20expired.%20Please%20resend%20a%20new%20verification."
+    );
+  }
+
+  const user = await User.findById(userId);
+  user.isVerified = true;
+  await user.save();
+  await userVerification.deleteOne();
+  res.redirect("http://localhost:5000/api/auth/verifiedEmail");
+};
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+export const verifiedEmail = (req, res) => {
+  res.sendFile(path.join(__dirname, "../views/verified.html"));
 };

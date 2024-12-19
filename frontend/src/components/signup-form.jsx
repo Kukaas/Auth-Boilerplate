@@ -70,7 +70,9 @@ export function SignupForm({ className }) {
       if (res.status === 201) {
         setLoading(false);
         navigate("/sign-in");
-        toast.success("Account created successfully.");
+        toast.success("Account created successfully.", {
+          description: "Please verify your email to login.",
+        });
       }
     } catch (error) {
       console.error(error);
