@@ -67,7 +67,7 @@ export default function ForgotPasswordForm({ className }) {
       if (response.status === 200) {
         setLoading(false);
         localStorage.setItem("email", email);
-        toast.success("Reset link sent successfully.");
+        toast.success("An OTP has been sent to your email.");
         navigate(`/verify-otp/${generatedToken}`);
       }
     } catch (error) {
