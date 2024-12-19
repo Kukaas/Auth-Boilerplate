@@ -1,6 +1,10 @@
 import User from "../models/user.model.js";
 import bcrypt from "bcryptjs";
 import { setToken } from "../utils/setToken.js";
+import { sendVerificationEmail } from "../utils/emails.js";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 export const signUp = async (req, res, next) => {
   try {
@@ -42,16 +46,8 @@ export const signUp = async (req, res, next) => {
       password: hashedPassword,
     });
 
-    await newUser.save();
-
-    res.status(201).json({
-      user: {
-        _id: newUser._id,
-        name: newUser.name,
-        email: newUser.email,
-      },
-      success: true,
-      message: "User created successfully!",
+    await newUser.save().then((result) => {
+      sendVerificationEmail(result, res);
     });
   } catch (error) {
     next(error);
