@@ -10,7 +10,6 @@ import PropTypes from "prop-types";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import {
   Form,
   FormControl,
@@ -28,10 +27,9 @@ import { useForm } from "react-hook-form";
 
 const schema = z.object({
   email: z.string().email(),
-  password: z.string().min(6),
 });
 
-export function LoginForm({ className }) {
+export default function ForgotPasswordForm({ className }) {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
@@ -39,47 +37,23 @@ export function LoginForm({ className }) {
     resolver: zodResolver(schema),
     defaultValues: {
       email: "",
-      password: "",
     },
   });
 
-  const handleLogin = async (values) => {
-    try {
-      setLoading(true);
-      const { email, password } = values;
-
-      if (!email || !password) {
-        toast.error("All fields are required.");
-        return;
-      }
-
-      const response = await axios.post(
-        "http://localhost:5000/api/auth/login",
-        values
-      );
-
-      if (response.status === 200) {
-        toast.success("Logged in successfully.");
-        setLoading(false);
-        navigate("/dashboard");
-      }
-    } catch (error) {
-      setLoading(false);
-      console.error(error);
-      toast.error("Invalid email or password.");
-    }
+  const handleForgotPassword = async (values) => {
+    console.log(values);
   };
-
   return (
     <Form {...form}>
       <form
         className={cn("flex flex-col gap-6", className)}
-        onSubmit={form.handleSubmit(handleLogin)}
+        onSubmit={form.handleSubmit(handleForgotPassword)}
       >
         <div className="flex flex-col items-center gap-2 text-center">
-          <h1 className="text-2xl font-bold">Login to your account</h1>
+          <h1 className="text-2xl font-bold">Forgot your password?</h1>
           <p className="text-balance text-sm text-muted-foreground">
-            Enter your email below to login to your account
+            Enter your email address and we will send you a link to reset your
+            password.
           </p>
         </div>
         <div className="grid gap-6">
@@ -98,31 +72,8 @@ export function LoginForm({ className }) {
               )}
             />
           </div>
-          <div className="grid gap-2">
-            <FormField
-              control={form.control}
-              name="password"
-              render={({ field }) => (
-                <FormItem>
-                  <div className="flex items-center">
-                    <Label htmlFor="password">Password</Label>
-                    <p
-                      onClick={() => navigate("/forgot-password")}
-                      className="ml-auto text-sm underline-offset-4 hover:underline cursor-pointer"
-                    >
-                      Forgot your password?
-                    </p>
-                  </div>
-                  <FormControl>
-                    <Input {...field} type="password" />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </div>
           <Button type="submit" className="w-full" disabled={loading}>
-            {loading ? "Logging in..." : "Login"}
+            {loading ? "Sending..." : "Send reset link"}
           </Button>
         </div>
         <div className="text-center text-sm">
@@ -139,6 +90,6 @@ export function LoginForm({ className }) {
   );
 }
 
-LoginForm.propTypes = {
+ForgotPasswordForm.propTypes = {
   className: PropTypes.string,
 };
